@@ -296,6 +296,32 @@ namespace AGSUnpacker.UI.Views.Windows
     }
     #endregion
 
+    #region GenerateModulesListCommand
+    private IAsyncRelayCommand _generateModulesListCommand;
+    public IAsyncRelayCommand GenerateModulesListCommand
+    {
+      get => _generateModulesListCommand;
+      set => SetProperty(ref _generateModulesListCommand, value);
+    }
+
+    private Task OnGenerateModulesListExecute()
+    {
+      return SelectFileAsync("Select game data file", "Game data (*.dta)|*.dta|All files|*.*",
+        (filepath) =>
+        {
+          string targetFolder = Path.GetDirectoryName(filepath);
+          string targetFilepath = Path.Combine(targetFolder, "ScriptModules.lst");
+          ScriptManager.ExtractModulesList(filepath, targetFilepath);
+        }
+      );
+    }
+
+    private bool OnCanGenerateModulesList()
+    {
+      return !GenerateModulesListCommand.IsRunning;
+    }
+    #endregion
+
     #region ExtractScriptsCommand
     private IAsyncRelayCommand _extractScriptsCommand;
     public IAsyncRelayCommand ExtractScriptsCommand
@@ -630,6 +656,9 @@ namespace AGSUnpacker.UI.Views.Windows
 
       ExtractGameIdCommand = new AsyncRelayCommand(OnExtractGameIdExecute, OnCanExtractGameIdExecute, AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler);
       ExtractGameIdCommand.PropertyChanged += OnPropertyChanged;
+
+      GenerateModulesListCommand = new AsyncRelayCommand(OnGenerateModulesListExecute, OnCanGenerateModulesList, AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler);
+      GenerateModulesListCommand.PropertyChanged += OnPropertyChanged;
 
       ShowRoomManagerCommand = new RelayCommand(OnShowRoomManagerExecute);
     }

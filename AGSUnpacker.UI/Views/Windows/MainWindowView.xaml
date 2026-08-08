@@ -104,6 +104,7 @@
         <StackPanel>
           <Button Content="Extract Game ID" Command="{Binding ExtractGameIdCommand}"/>
           <Button Content="Change room background" Command="{Binding ShowRoomManagerCommand}"/>
+          <Button Content="Generate modules list" Command="{Binding GenerateModulesListCommand}"/>
         </StackPanel>
       </GroupBox>
     </StackPanel>

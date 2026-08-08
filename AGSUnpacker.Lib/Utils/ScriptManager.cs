@@ -253,5 +253,27 @@ namespace AGSUnpacker.Lib.Utils
         }
       }
     }
+
+    public static void ExtractModulesList(string targetFile, string outputFile)
+    {
+      AGSGameData data = new();
+      data.LoadFromFile(targetFile);
+
+      string[] modules = new string[data.scriptModules.Length];
+
+      for (int i = 0; i < modules.Length; ++i)
+      {
+        // TODO(adm244): refactor this into AGSScript member function?
+        string name = data.scriptModules[i].Name;
+        if (string.IsNullOrWhiteSpace(name) && (data.scriptModules[i].Sections.Length > 0))
+          name = Path.GetFileNameWithoutExtension(data.scriptModules[i].Sections[^1].Name);
+        if (string.IsNullOrWhiteSpace(name))
+          name = $"globalscript{i}";
+
+        modules[i] = $"{name}.{ScriptFileExtension}";
+      }
+
+      File.WriteAllLines(outputFile, modules);
+    }
   }
 }
