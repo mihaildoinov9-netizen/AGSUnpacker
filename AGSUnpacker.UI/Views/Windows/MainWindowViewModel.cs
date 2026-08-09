@@ -373,8 +373,7 @@ namespace AGSUnpacker.UI.Views.Windows
           Title = "Select one or more script files",
           Filter = "SCOM3 script file (*." + ScriptManager.ScriptFileExtension + ")|*."
                     + ScriptManager.ScriptFileExtension + "|All files|*.*",
-          Multiselect = true,
-          InitialDirectory = LastSelectedFilepath
+          Multiselect = true
         }
       );
     }
@@ -411,8 +410,7 @@ namespace AGSUnpacker.UI.Views.Windows
           Title = "Select one or more script files",
           Filter = "SCOM3 script file(*." + ScriptManager.ScriptFileExtension + ")|*."
                     + ScriptManager.ScriptFileExtension + "|All files|*.*",
-          Multiselect = true,
-          InitialDirectory = LastSelectedFilepath
+          Multiselect = true
         }
       );
     }
@@ -454,12 +452,13 @@ namespace AGSUnpacker.UI.Views.Windows
       OpenFileDialog openDialog = new OpenFileDialog();
       for (int i = 0; i < options.Length; ++i)
       {
+        openDialog.Reset();
         openDialog.Title = options[i].Title;
         openDialog.Filter = options[i].Filter;
         openDialog.Multiselect = options[i].Multiselect;
         openDialog.CheckFileExists = true;
         openDialog.CheckPathExists = true;
-        openDialog.InitialDirectory = options[i].InitialDirectory;
+        openDialog.InitialDirectory = options[i].InitialDirectory ?? LastSelectedFilepath;
 
         if (openDialog.ShowDialog(_windowService.GetWindow(this)) != true)
           return Task.CompletedTask;
@@ -675,7 +674,7 @@ namespace AGSUnpacker.UI.Views.Windows
         Title = string.Empty;
         Filter = string.Empty;
         Multiselect = false;
-        InitialDirectory = string.Empty;
+        InitialDirectory = null;
       }
     }
   }
